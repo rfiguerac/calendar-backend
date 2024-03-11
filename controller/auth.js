@@ -6,7 +6,8 @@ const { generarJWT } = require('../helpers/jwt');
 
 
 const crearUser = async (req, res = express.response) => {
-  const { password, email } = req.body;
+  const { name, password, email } = req.body;
+  console.log(req.body);
   try {
     let usuario = await Usuario.findOne({ email });
 
@@ -44,6 +45,7 @@ const crearUser = async (req, res = express.response) => {
 };
 
 const loginUsuario = async (req, res = express.response) => {
+  console.log(req.body);
   const { email, password, name } = req.body;
   try {
     const usuario = await Usuario.findOne({ email });
@@ -56,6 +58,7 @@ const loginUsuario = async (req, res = express.response) => {
     }
 
     // confirmar la contraseña
+    console.log(password + '---' + usuario.password);
     const validPassword = bcrypt.compareSync(password, usuario.password);
     if ( !validPassword ) {
       return res.status(400).json({
@@ -92,6 +95,8 @@ const revalidarToken = async(req, res = express.response) => {
     res.status(201).json({
       ok: true,
       msg: "renew",
+      uid,
+      name,
       token
     });
     
